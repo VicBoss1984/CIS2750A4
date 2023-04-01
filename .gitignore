@@ -1,1 +1,6 @@
-DocsAndNotes
+docsAndNotes
+*.so
+*.o
+molecule.i
+molecule.py
+molecule_wrap.c
