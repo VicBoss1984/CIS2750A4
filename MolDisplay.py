@@ -1,5 +1,5 @@
 import molecule # importing my shared C library
-from io import BytesIO
+from io import BytesIO # this import is essential in the parse method later on
 
 molObj = molecule.molecule() # creating an instance of the molecule class/struct from my C library
 
@@ -58,9 +58,11 @@ class Bond:
 # Molecule inherits from the molecule struct/class in our C library
 class Molecule(molecule.molecule):
 
+	# ToString method for printing the contents of the molecule class
 	def __str__(self):
 		return '''%d'%d'%d'%d"''' % (molObj.atom_max, molObj.atom_no, molObj.bond_max, molObj.bond_no)
 
+	# I decided to encapsulate the mergesort computations into one method for enchanced readability
 	def mergeAtomBonds(self):
 		atomList = []
 		bondList = []
@@ -91,10 +93,12 @@ class Molecule(molecule.molecule):
 		
 		return finalString
 
+	# My svg method calls the mergeAtomBonds() method in the same class for creating the molecule svg file
 	def svg(self):
 		cpyMergArr = self.mergeAtomBonds()
 		return header + cpyMergArr + footer
 
+	# My parse method is divided into two different implementations since the server sends different things and the normal MolDisplay sends different objects
 	def parse(self, inputFileObject):
 		fileLines = inputFileObject.readlines()
 		if isinstance(inputFileObject, BytesIO) == False:
@@ -129,10 +133,11 @@ class Molecule(molecule.molecule):
 				self.append_bond(int(bondA1), int(bondA2), int(bondType))
 			return numAtBoStr
 
+# My driver code for testing and running the MolDisplay.py
 if __name__=="__main__":
 	mol = Molecule()
 
-	inputFile = open('testFiles/CID_31260.sdf', 'r')
+	inputFile = open('CID_31260.sdf', 'r')
 	mol.parse(inputFile)
 	mol.sort()
 
@@ -146,7 +151,7 @@ if __name__=="__main__":
 		newBond = Bond(bond)
 		print(newBond)
 
-	newSVG_File = open('testFiles/Isopentanol.svg', 'w')
+	newSVG_File = open('Isopentanol.svg', 'w')
 	newSVG_File.write(mol.svg())
 	newSVG_File.close()
 	inputFile.close()

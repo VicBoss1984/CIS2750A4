@@ -1,13 +1,14 @@
-import sys
-from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs
-from io import BytesIO
-import MolDisplay
+import sys # this import is necessary for using any methods from the system module
+from http.server import HTTPServer, BaseHTTPRequestHandler # I needed this import for the webserver
+from urllib.parse import urlparse, parse_qs # I need this import for parsing the web content
+from io import BytesIO # just like MolDisplay.py, I can't think of another implementation that would work without the io module
+import MolDisplay # I need MolDisplay to use my own python library
 
+# customHandler is a class that inherits the BaseHTTPRequestHandler class
 class customHandler(BaseHTTPRequestHandler):
 	
+	# do_GET method has been overriden because I wanted to customize what the webserver shows when it starts running
 	def do_GET(self):
-		
 		if self.path == "/":
 			self.send_response(200)
 			self.send_header("Content-type", "text/html")
@@ -19,8 +20,8 @@ class customHandler(BaseHTTPRequestHandler):
 			self.end_headers()
 			self.wfile.write(bytes("404: not found", "utf-8"))
 
+	# do_POST method needed to be overriden because I needed to perform specific computations and library calls to make it useful
 	def do_POST(self):
-		
 		if self.path == "/molecule":
 			contentLength = int(self.headers['Content-Length'])
 			body = self.rfile.read(contentLength)
@@ -39,6 +40,7 @@ class customHandler(BaseHTTPRequestHandler):
 		else:
 			self.send_error(404)
 
+# Embedded html code for my do_GET method
 webform = """ 
 <html>
 	<head>
@@ -58,5 +60,6 @@ webform = """
 </html> 
 """
 
+# Taking command-line arguments here, which is where the sys module comes in!
 httpd = HTTPServer(('localhost', int(sys.argv[1])), customHandler)
 httpd.serve_forever()
