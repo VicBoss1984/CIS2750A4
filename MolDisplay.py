@@ -137,7 +137,7 @@ class Molecule(molecule.molecule):
 if __name__=="__main__":
 	mol = Molecule()
 
-	inputFile = open('CID_31260.sdf', 'r')
+	inputFile = open('testFiles/CID_31260.sdf', 'r')
 	mol.parse(inputFile)
 	mol.sort()
 
@@ -151,7 +151,7 @@ if __name__=="__main__":
 		newBond = Bond(bond)
 		print(newBond)
 
-	newSVG_File = open('Isopentanol.svg', 'w')
+	newSVG_File = open('testFiles/Isopentanol.svg', 'w')
 	newSVG_File.write(mol.svg())
 	newSVG_File.close()
 	inputFile.close()
