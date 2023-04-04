@@ -24,15 +24,12 @@ class customHandler(BaseHTTPRequestHandler):
 		if self.path == "/molecule":
 			contentLength = int(self.headers['Content-Length'])
 			body = self.rfile.read(contentLength)
-			print(repr(body))
-			print(repr(body))
 			body = BytesIO(body)
 			molIns = MolDisplay.Molecule()
-			print(repr(body))
 			parsedFile = molIns.parse(body)
-			if parseFile is not None:
-				mol.sort()
-				svgData = mol.svg()
+			if parsedFile is not None:
+				molIns.sort()
+				svgData = molIns.svg()
 				self.send_response(200)
 				self.send_header('Content-type', 'image/svg+xml')
 				self.end_headers()
