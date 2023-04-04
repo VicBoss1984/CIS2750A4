@@ -5,3 +5,4 @@ molecule.i
 molecule.py
 molecule_wrap.c
 testFiles
+__pycache__
