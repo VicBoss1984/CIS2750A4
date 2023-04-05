@@ -131,19 +131,6 @@ void molfree(molecule *ptr) {
   free(ptr);
 }
 
-rotations *spin(molecule *mol) {
-  rotations *molRot = NULL;
-  printf("This function is a work-in-progress.\n");
-  return molRot;
-}
-
-void rotationsfree(rotations *rotations) {
-  free(rotations->x);
-  free(rotations->y);
-  free(rotations->z);
-  free(rotations);
-}
-
 void molappend_atom(molecule *molecule, atom *atom) {
   
   if (molecule->atom_no == molecule->atom_max) {

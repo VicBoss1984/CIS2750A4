@@ -53,7 +53,5 @@ void xrotation(xform_matrix xform_matrix, unsigned short deg);
 void yrotation(xform_matrix xform_matrix, unsigned short deg);
 void zrotation(xform_matrix xform_matrix, unsigned short deg);
 void mol_xform(molecule *molecule, xform_matrix matrix);
-rotations *spin(molecule *mol);
-void rotationsfree(rotations *rotations);
 
 #endif
