@@ -14,9 +14,10 @@ typedef struct atom {
 } atom;
 
 typedef struct bond {
-  unsigned short a1, a2;
-  unsigned char epairs;
+  unsigned short a1;
+  unsigned short a2;
   atom *atoms;
+  unsigned char epairs;
   double x1, x2, y1, y2, z, len, dx, dy;
 } bond;
 
@@ -28,6 +29,16 @@ typedef struct molecule {
 } molecule;
 
 typedef double xform_matrix[3][3];
+
+typedef struct mx_wrapper {
+  xform_matrix xform_matrix;
+} mx_wrapper;
+
+typedef struct rotations {
+  molecule *x[72];
+  molecule *y[72];
+  molecule *z[72];
+} rotations;
 
 void atomset(atom *atom, char element[3], double *x, double *y, double *z) {
   for (int ctr = 0; ctr < 3; ctr++) {
@@ -112,13 +123,25 @@ molecule *molmalloc(unsigned short atom_max, unsigned short bond_max) {
   return molPtr;
 }
 
-
 void molfree(molecule *ptr) {
   free(ptr->atoms);
   free(ptr->bonds);
   free(ptr->atom_ptrs);
   free(ptr->bond_ptrs);
   free(ptr);
+}
+
+rotations *spin(molecule *mol) {
+  rotations *molRot = NULL;
+  printf("This function is a work-in-progress.\n");
+  return molRot;
+}
+
+void rotationsfree(rotations *rotations) {
+  free(rotations->x);
+  free(rotations->y);
+  free(rotations->z);
+  free(rotations);
 }
 
 void molappend_atom(molecule *molecule, atom *atom) {
@@ -326,7 +349,7 @@ int main(int argc, char **argv) {
   bond b1, b2;
   molecule *molecule, *mx, *my, *mz;
   xform_matrix xrot, yrot, zrot;
-  unsigned short a1_Index, a2_Index, a3_Index, a4_Index;
+  unsigned short a1_Index, a2_Index, a3_Index;
   double x, y, z;
   unsigned char epairsOne = 1;
   unsigned char epairsTwo = 3;
@@ -359,7 +382,6 @@ int main(int argc, char **argv) {
   bondset(&b1, &a1_Index, &a2_Index, atomsOne, &epairsOne);
 
   a3_Index = 0;
-  a4_Index = 1;
   bondset(&b2, &a1_Index, &a3_Index, atomsTwo, &epairsTwo);
 
   molecule = molmalloc(3, 2);

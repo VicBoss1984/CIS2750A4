@@ -6,3 +6,4 @@ molecule.py
 molecule_wrap.c
 testFiles
 __pycache__
+a.out
