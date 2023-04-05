@@ -186,8 +186,7 @@ molecule *molcopy(molecule *src) {
   return cpyMol;
 }
 
-// helper function
-int atom_ptrsCompare(const void *atomOne, const void *atomTwo) {
+int atom_comp(const void *atomOne, const void *atomTwo) {
   double arithmResult;
   int cmpResult;
 
@@ -208,7 +207,7 @@ int atom_ptrsCompare(const void *atomOne, const void *atomTwo) {
 }
 
 // bond_ptrsCompare needs to be tested again just to make sure the new changes haven't broken it
-int bond_ptrsCompare(const void *bondOne, const void *bondTwo) {
+int bond_comp(const void *bondOne, const void *bondTwo) {
   double arithmResult;
   int cmpResult;
   
@@ -230,8 +229,8 @@ int bond_ptrsCompare(const void *bondOne, const void *bondTwo) {
 
 // our qsort function
 void molsort(molecule *molecule) {
-  qsort(molecule->atom_ptrs, molecule->atom_no, sizeof(atom *), atom_ptrsCompare);
-  qsort(molecule->bond_ptrs, molecule->bond_no, sizeof(bond *), bond_ptrsCompare);
+  qsort(molecule->atom_ptrs, molecule->atom_no, sizeof(atom *), atom_comp);
+  qsort(molecule->bond_ptrs, molecule->bond_no, sizeof(bond *), bond_comp);
 }
 
 // the rotation functions are curcial for our transformations
@@ -287,9 +286,13 @@ void zrotation(xform_matrix xform_matrix, unsigned short deg) {
 void mol_xform(molecule *molecule, xform_matrix matrix) {
   
   for (int ctr = 0; ctr < molecule->atom_no; ctr++) {
-    molecule->atoms[ctr].x = (matrix[0][0] * molecule->atoms[ctr].x) + (matrix[0][1] * molecule->atoms[ctr].y) + (matrix[0][2] * molecule->atoms[ctr].z);
-    molecule->atoms[ctr].y = (matrix[1][0] * molecule->atoms[ctr].x) + (matrix[1][1] * molecule->atoms[ctr].y) + (matrix[1][2] * molecule->atoms[ctr].z);
-    molecule->atoms[ctr].z = (matrix[2][0] * molecule->atoms[ctr].x) + (matrix[2][1] * molecule->atoms[ctr].y) + (matrix[2][2] * molecule->atoms[ctr].z);
+    double x = molecule->atoms[ctr].x;
+    double y = molecule->atoms[ctr].y;
+    double z = molecule->atoms[ctr].z;
+
+    molecule->atoms[ctr].x = (matrix[0][0] * x) + (matrix[0][1] * y) + (matrix[0][2] * z);
+    molecule->atoms[ctr].y = (matrix[1][0] * x) + (matrix[1][1] * y) + (matrix[1][2] * z);
+    molecule->atoms[ctr].z = (matrix[2][0] * x) + (matrix[2][1] * y) + (matrix[2][2] * z);
   }
 
   // I think this is how the new modification for mol_xform is supposed to look like, but I gotta test it more later
