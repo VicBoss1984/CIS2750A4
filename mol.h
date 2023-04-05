@@ -16,7 +16,6 @@ typedef struct bond {
   atom *atoms;
   unsigned char epairs;
   double x1, x2, y1, y2, z, len, dx, dy;
-
 } bond;
 
 typedef struct molecule {
