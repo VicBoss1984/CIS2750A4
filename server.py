@@ -4,6 +4,7 @@ import sys # this import is necessary for using any methods from the system modu
 import urllib # I need this import for parsing the web content
 from http.server import HTTPServer, BaseHTTPRequestHandler # I needed this import for the webserver
 from io import BytesIO # just like MolDisplay.py, I can't think of another implementation that would work without the io module
+from urllib.parse import parse_qs
 
 # frontendFiles = ['/frontEnd/cssSrc/css_file1.css', '/frontEnd/htmlSrc/htmlWebsite.html', '/frontend/javascriptSrc/javascript_code.js']
 
@@ -44,6 +45,7 @@ class customHandler(BaseHTTPRequestHandler):
 
 	# do_POST method needed to be overriden because I needed to perform specific computations and library calls to make it useful
 	def do_POST(self):
+		print(f"do_POST called with path: {self.path}")
 		if self.path == "/molecule":
 			contentLength = int(self.headers['Content-Length'])
 			body = self.rfile.read(contentLength)
@@ -59,6 +61,32 @@ class customHandler(BaseHTTPRequestHandler):
 				self.wfile.write(svgData.encode('utf-8'))
 			else:
 				self.send_error(400, message = "Error parsing the file")
+		elif self.path == "/element":
+			contentLength = int(self.headers["Content-length"])
+			postData = parse_qs(self.rfile.read(contentLength).decode('utf-8'))
+			elementCode = postData.get('elementCode', [''])[0]
+			elementName = postData.get('elementName', [''])[0]
+			operation = postData.get('operation', [''])[0]
+			db = molsql.Database(reset = False)
+
+			if operation == "add":
+				try:
+					db["Elements"] = (None, elementCode, elementName, "000000", "000000", "000000", 1)
+					print(f"Added element: {elementCode}, {elementName}")
+					self.send_response(200)
+					self.end_headers()
+				except sqlite3.IntegrityError:
+					print(f"Element code already exists: {elementCode}")
+					self.send_error(400, message = "Element code already exists")
+			elif operation == "delete":
+				result = db.delete("Elements", "ELEMENT_CODE", elementCode)
+				if result > 0:
+					print(f"Deleted element: {elementCode}")
+					self.send_response(200)
+					self.end_headers()
+				else:
+					print(f"Element not found: {elementCode}")
+					self.send_error(400, message = "Element not found")
 		else:
 			self.send_error(404)
 

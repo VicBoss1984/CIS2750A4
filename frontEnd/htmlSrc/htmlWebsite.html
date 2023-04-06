@@ -1,6 +1,12 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 	<head>
-		<title> File Upload </title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Element Manager</title>
+		<link rel="stylesheet" href="/frontEnd/cssSrc/css_file1.css">
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="/frontEnd/javascriptSrc/javascript_code.js"></script>
 	</head>
 	<body>
 		<h1> File Upload </h1>
@@ -12,5 +18,19 @@
 				<input type="submit" value="Upload"/>
 			</p>
 	   </form>
+		<h2>Add/Delete Element</h2>
+		<form id="element-form">
+			<label for="element_code">Element Code:</label>
+			<input type="text" id="element_code" name="element_code" required>
+			<input type="submit" id="submit-btn" value="Submit">
+			<br><br>
+			<label for="element_name">Element Name:</label>
+			<input type="text" id="element_name" name="element_name" required>
+			<br><br>
+			<input type="radio" id="add" name="operation" value="add" checked>
+			<label for="add">Add</label>
+			<input type="radio" id="delete" name="operation" value="delete">
+			<label for="delete">Delete</label>
+		</form>
 	 </body>
-</html> 
+</html>
