@@ -61,6 +61,24 @@ class Database:
 						FOREIGN KEY(MOLECULE_ID) REFERENCES Molecules,
 						FOREIGN KEY(BOND_ID) REFERENCES Bonds);""")
 
+	def createDatabase(self):
+		db = Database(reset = True)
+		db.create_tables()
+
+		db['Elements'] = (1, 'H', 'Hydrogen', 'FFFFFF', '050505', '020202', 25)
+		db['Elements'] = (6, 'C', 'Carbon', '808080', '010101', '000000', 40)
+		db['Elements'] = (7, 'N', 'Nitrogen', '0000FF', '000005', '000002', 40)
+		db['Elements'] = (8, 'O', 'Oxygen', 'FF0000', '050000', '020000', 40)
+
+		fp = open('testFiles/water-3D-structure-CT1000292221.sdf')
+		db.add_molecule('Water', fp)
+
+		fp = open('testFiles/CID_31260.sdf')
+		db.add_molecule('Isopentanol', fp)
+
+		fp = open('testFiles/caffeine-3D-structure-CT1001987571.sdf')
+		db.add_molecule('Caffeine', fp)
+
 	# We are overriding the setitem() default method because we want to perform operator overloading on the '[]' operators later.
 	# My intention with this method is to create a query string that can accept any given table as an argument.
 	def __setitem__(self, table, values):
@@ -161,6 +179,7 @@ class Database:
 
 if __name__ == "__main__":
 	db = Database(reset = False)
+	db.createDatabase()
 	MolDisplay.radius = db.radius()
 	MolDisplay.elementName = db.element_name()
 	MolDisplay.header += db.radial_gradients()

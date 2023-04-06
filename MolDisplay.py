@@ -1,11 +1,10 @@
 import molecule # importing my shared C library
+import molsql
 from io import BytesIO # this import is essential in the parse method later on
 
 molObj = molecule.molecule() # creating an instance of the molecule class/struct from my C library
 
 # These are constants for use later
-radius = {'H': 25, 'C': 40, 'O': 40, 'N': 40}
-element_name = {'H': 'grey', 'C': 'black', 'O': 'red', 'N': 'blue'}
 header = """<svg version="1.1" width="1000" height="1000" xmlns="http://www.w3.org/2000/svg">"""
 footer = """</svg>"""
 offsetx = 500
@@ -14,8 +13,8 @@ offsety = 500
 # The Atom class is responsible for everything related to the atoms in this program
 class Atom:
 	
-	# This is a constructor that initializes a c_atom member variable every-time it's called
 	def __init__(self, c_atom):
+		self.molSqlObj = molsql.Database(reset = False)
 		self.c_atom = c_atom
 		self.z = c_atom.z
 
@@ -27,9 +26,9 @@ class Atom:
 	def svg(self):
 		circleX = (self.c_atom.x * 100) + offsetx
 		circleY = (self.c_atom.y * 100) + offsety
-		circleR = radius[self.c_atom.element]
-		circleColour = element_name[self.c_atom.element]
-		return ' <circle cx="%.2f" cy="%.2f" r="%d" fill="%s"/>\n' % (circleX, circleY, circleR, circleColour)
+		circleR = self.molSqlObj.radius()
+		circleColour = self.molSqlObj.element_name()
+		return ' <circle cx="%.2f" cy="%.2f" r="%d" fill="url(#%s)"/>\n' % (circleX, circleY, circleR[self.c_atom.element], circleColour[self.c_atom.element])
 
 # The Bond class is responsible for everything related to the bonds in a molecule
 class Bond:
@@ -115,7 +114,7 @@ class Molecule(molecule.molecule):
 			for bLine in bondLines:
 				bValues = bLine.split()
 				bondA1, bondA2, bondType = bValues[:3]
-				self.append_bond(int(bondA1), int(bondA2), int(bondType))
+				self.append_bond(int(bondA1) - 1, int(bondA2) - 1, int(bondType))
 		else:
 			line = fileLines[7].split()
 			num_atoms = int(line[0])
@@ -130,7 +129,7 @@ class Molecule(molecule.molecule):
 			for bLine in bondLines:
 				bValues = bLine.split()
 				bondA1, bondA2, bondType = bValues[:3]
-				self.append_bond(int(bondA1), int(bondA2), int(bondType))
+				self.append_bond(int(bondA1) - 1, int(bondA2) - 1, int(bondType))
 			return numAtBoStr
 
 # My driver code for testing and running the MolDisplay.py

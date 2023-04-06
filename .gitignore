@@ -8,3 +8,7 @@ testFiles
 __pycache__
 a.out
 test.py
+molecules.db
+Water.svg
+Caffeine.svg
+Isopentanol.svg
