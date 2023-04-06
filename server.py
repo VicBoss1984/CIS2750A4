@@ -1,20 +1,42 @@
+import molsql
+import MolDisplay
 import sys # this import is necessary for using any methods from the system module
+import urllib # I need this import for parsing the web content
 from http.server import HTTPServer, BaseHTTPRequestHandler # I needed this import for the webserver
-from urllib.parse import urlparse, parse_qs # I need this import for parsing the web content
 from io import BytesIO # just like MolDisplay.py, I can't think of another implementation that would work without the io module
-import MolDisplay # I need MolDisplay to use my own python library
+
+# frontendFiles = ['/frontEnd/cssSrc/css_file1.css', '/frontEnd/htmlSrc/htmlWebsite.html', '/frontend/javascriptSrc/javascript_code.js']
 
 # customHandler is a class that inherits the BaseHTTPRequestHandler class
 class customHandler(BaseHTTPRequestHandler):
 	
 	# do_GET method has been overriden because I wanted to customize what the webserver shows when it starts running
 	def do_GET(self):
+		print(f"Requested path: {self.path}")
 		if self.path == "/":
-			self.send_response(200)
-			self.send_header("Content-type", "text/html")
-			self.send_header("Content-length", len(webform))
-			self.end_headers()
-			self.wfile.write(bytes(webform, "utf-8"))
+			self.path = "/frontEnd/htmlSrc/htmlWebsite.html"
+		contentType = None
+		if self.path.endswith(".html"):
+			contentType = "text/html"
+		elif self.path.endswith(".css"):
+			contentType = "text/css"
+		elif self.path.endswith(".js"):
+			contentType = "application/javascript"
+
+		if contentType:
+			try:
+				with open(self.path[1:], "r") as f:
+					page = f.read()
+					self.send_response(200)
+					self.send_header("Content-type", contentType)
+					self.send_header("Content-length", len(page))
+					self.end_headers()
+					self.wfile.write(bytes(page, "utf-8"))
+			except FileNotFoundError:
+				print(f"File not found: {self.path[1:]}")
+				self.send_response(404)
+				self.end_headers()
+				self.wfile.write(bytes("404: not found", "utf-8"))
 		else:
 			self.send_response(404)
 			self.end_headers()
@@ -39,26 +61,6 @@ class customHandler(BaseHTTPRequestHandler):
 				self.send_error(400, message = "Error parsing the file")
 		else:
 			self.send_error(404)
-
-# Embedded html code for my do_GET method
-webform = """ 
-<html>
-	<head>
-		<title> File Upload </title>
-	</head>
-	<body>
-		<h1> File Upload </h1>
-		<form action="molecule" enctype="multipart/form-data" method="post">
-			<p>
-				<input type="file" id="sdf_file" name="filename"/>
-			</p>
-			<p>
-				<input type="submit" value="Upload"/>
-			</p>
-	   </form>
-	 </body>
-</html> 
-"""
 
 # Taking command-line arguments here, which is where the sys module comes in!
 httpd = HTTPServer(('localhost', int(sys.argv[1])), customHandler)
