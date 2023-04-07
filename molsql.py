@@ -177,15 +177,23 @@ class Database:
 
 		return ''.join([radialGradientSVG % (element_name, color1, color2, color3) for element_name, color1, color2, color3 in elements])
 
+	def get_list_mol(self):
+		listMol = self.conn.execute("SELECT NAME FROM Molecules").fetchall()
+		return listMol
+
 if __name__ == "__main__":
 	db = Database(reset = False)
 	db.createDatabase()
 	MolDisplay.radius = db.radius()
 	MolDisplay.elementName = db.element_name()
 	MolDisplay.header += db.radial_gradients()
+	listMol = db.get_list_mol()
 
-	for molecule in ['Water', 'Caffeine', 'Isopentanol']:
-		mol = db.load_mol(molecule)
-		mol.sort()
-		with open(molecule + ".svg", "w") as fp:
-			fp.write(mol.svg())
+	for tupleMol in range(len(listMol)):
+		tupleMol = listMol[tupleMol]
+		for molStr in range(len(tupleMol)):
+			molStr = tupleMol[molStr]
+			molecule = db.load_mol(molStr)
+			molecule.sort()
+			with open(molStr + ".svg", "w") as fp:
+				fp.write(molecule.svg())
