@@ -1,5 +1,6 @@
 # We will need these 3 modules for what we are about to do in this class.
 import os
+import glob
 import sqlite3
 import MolDisplay
 
@@ -61,23 +62,6 @@ class Database:
 						FOREIGN KEY(MOLECULE_ID) REFERENCES Molecules,
 						FOREIGN KEY(BOND_ID) REFERENCES Bonds);""")
 
-	def createDatabase(self):
-		db = Database(reset = True)
-		db.create_tables()
-
-		db['Elements'] = (1, 'H', 'Hydrogen', 'FFFFFF', '050505', '020202', 25)
-		db['Elements'] = (6, 'C', 'Carbon', '808080', '010101', '000000', 40)
-		db['Elements'] = (7, 'N', 'Nitrogen', '0000FF', '000005', '000002', 40)
-		db['Elements'] = (8, 'O', 'Oxygen', 'FF0000', '050000', '020000', 40)
-
-		fp = open('testFiles/water-3D-structure-CT1000292221.sdf')
-		db.add_molecule('Water', fp)
-
-		fp = open('testFiles/CID_31260.sdf')
-		db.add_molecule('Isopentanol', fp)
-
-		fp = open('testFiles/caffeine-3D-structure-CT1001987571.sdf')
-		db.add_molecule('Caffeine', fp)
 
 	# We are overriding the setitem() default method because we want to perform operator overloading on the '[]' operators later.
 	# My intention with this method is to create a query string that can accept any given table as an argument.
@@ -177,9 +161,44 @@ class Database:
 
 		return ''.join([radialGradientSVG % (element_name, color1, color2, color3) for element_name, color1, color2, color3 in elements])
 
+	def createDatabase(self):
+		db = Database(reset = True)
+		db.create_tables()
+
+		db['Elements'] = (1, 'H', 'Hydrogen', 'FFFFFF', '050505', '020202', 25)
+		db['Elements'] = (6, 'C', 'Carbon', '808080', '010101', '000000', 40)
+		db['Elements'] = (7, 'N', 'Nitrogen', '0000FF', '000005', '000002', 40)
+		db['Elements'] = (8, 'O', 'Oxygen', 'FF0000', '050000', '020000', 40)
+
+		sdfDir = 'testFiles/'
+		sdfFiles = glob.glob(os.path.join(sdfDir, '*.sdf'))
+
+		for sdfFile in sdfFiles:
+			mol = os.path.splitext(os.path.basename(sdfFile))[0]
+			with open(sdfFile) as fp:
+				db.add_molecule(mol, fp)
+
 	def get_list_mol(self):
 		listMol = self.conn.execute("SELECT NAME FROM Molecules").fetchall()
 		return listMol
+
+	def write_svg_files(self):
+		db = Database(reset = False)
+		listMol = db.get_list_mol()
+		svgDir = "svgFiles"
+
+		if not os.path.exists(svgDir):
+			os.makedirs(svgDir)
+
+		for tupleMol in range(len(listMol)):
+			tupleMol = listMol[tupleMol]
+			for molStr in range(len(tupleMol)):
+				molStr = tupleMol[molStr]
+				molecule = db.load_mol(molStr)
+				molecule.sort()
+				svgFilePath = os.path.join(svgDir, f"{molStr}.svg")
+				with open(svgFilePath, "w") as fp:
+					fp.write(molecule.svg())
 
 if __name__ == "__main__":
 	db = Database(reset = False)
@@ -187,13 +206,4 @@ if __name__ == "__main__":
 	MolDisplay.radius = db.radius()
 	MolDisplay.elementName = db.element_name()
 	MolDisplay.header += db.radial_gradients()
-	listMol = db.get_list_mol()
-
-	for tupleMol in range(len(listMol)):
-		tupleMol = listMol[tupleMol]
-		for molStr in range(len(tupleMol)):
-			molStr = tupleMol[molStr]
-			molecule = db.load_mol(molStr)
-			molecule.sort()
-			with open(molStr + ".svg", "w") as fp:
-				fp.write(molecule.svg())
+	db.write_svg_files()
