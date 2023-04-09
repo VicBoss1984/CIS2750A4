@@ -200,6 +200,10 @@ class Database:
 				with open(svgFilePath, "w") as fp:
 					fp.write(molecule.svg())
 
+	def create_dum_tab(self):
+		self.conn.execute("""CREATE TABLE if not exists Dummy (
+						DUM_NO 		INTEGER);""")
+
 if __name__ == "__main__":
 	db = Database(reset = False)
 	db.createDatabase()

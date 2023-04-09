@@ -1,7 +1,6 @@
 $(document).ready(function () {
 
   $("#element-form").submit(async function (event) {
-    console.log("Form submit triggered"); // Add this line
     event.preventDefault();
 
     const elementCode = $("#element_code").val();
@@ -16,23 +15,24 @@ $(document).ready(function () {
     formData.append("element_code", elementCode);
     formData.append("element_name", elementName);
     formData.append("operation", operation);
-
-    try {
-      const response = await $.ajax({
-        url: "/element",
-        method: "POST",
-        processData: false,
-        contentType: false,
-        data: formData,
-      });
-
-      if (response.status === 200) {
-        alert("Operation successful!");
-      } else {
-        alert("Error: " + response.statusText);
+    
+    const response = await $.ajax({
+      url: "/element",
+      method: "POST",
+      processData: "application/json",
+      contentType: false,
+      data: JSON.stringify({
+        elementCode: elementCode,
+        elementName: elementName,
+        operation: operation
+      }),
+      success: function(response) { 
+        console.log("Success! Response:", response);
+      }, 
+      error: function(xhr, status, error) { 
+        console.error("Error! Status code:", xhr.status); 
+        console.error("Error message:", error);
       }
-    } catch (error) {
-      alert("Error: " + error);
-    }
+    });
   });
 });

@@ -1,19 +1,18 @@
-import molsql
+import json
 import MolDisplay
+import sqlite3
 import sys # this import is necessary for using any methods from the system module
 import urllib # I need this import for parsing the web content
 from http.server import HTTPServer, BaseHTTPRequestHandler # I needed this import for the webserver
 from io import BytesIO # just like MolDisplay.py, I can't think of another implementation that would work without the io module
 from urllib.parse import parse_qs
-
-# frontendFiles = ['/frontEnd/cssSrc/css_file1.css', '/frontEnd/htmlSrc/htmlWebsite.html', '/frontend/javascriptSrc/javascript_code.js']
+from molsql import Database
 
 # customHandler is a class that inherits the BaseHTTPRequestHandler class
 class customHandler(BaseHTTPRequestHandler):
 	
 	# do_GET method has been overriden because I wanted to customize what the webserver shows when it starts running
 	def do_GET(self):
-		print(f"Requested path: {self.path}")
 		if self.path == "/":
 			self.path = "/frontEnd/htmlSrc/htmlWebsite.html"
 		contentType = None
@@ -45,7 +44,6 @@ class customHandler(BaseHTTPRequestHandler):
 
 	# do_POST method needed to be overriden because I needed to perform specific computations and library calls to make it useful
 	def do_POST(self):
-		print(f"do_POST called with path: {self.path}")
 		if self.path == "/molecule":
 			contentLength = int(self.headers['Content-Length'])
 			body = self.rfile.read(contentLength)
@@ -62,19 +60,21 @@ class customHandler(BaseHTTPRequestHandler):
 			else:
 				self.send_error(400, message = "Error parsing the file")
 		elif self.path == "/element":
-			contentLength = int(self.headers["Content-length"])
-			postData = parse_qs(self.rfile.read(contentLength).decode('utf-8'))
-			elementCode = postData.get('elementCode', [''])[0]
-			elementName = postData.get('elementName', [''])[0]
-			operation = postData.get('operation', [''])[0]
-			db = molsql.Database(reset = False)
-
+			contentLength = int(self.headers.get('Content-Length', 0))
+			postData = self.rfile.read(contentLength)
+			postData = json.loads(postData.decode('utf-8'))
+			elementCode = postData.get('elementCode')
+			elementName = postData.get('elementName')
+			operation = postData.get('operation')
+			db = Database(reset = False)
 			if operation == "add":
 				try:
-					db["Elements"] = (None, elementCode, elementName, "000000", "000000", "000000", 1)
+					db.create_dum_tab()
 					print(f"Added element: {elementCode}, {elementName}")
-					self.send_response(200)
+					self.send_response(200) # OK
+					self.send_header('Content-type', 'text/plain')
 					self.end_headers()
+					self.wfile.write(b'Hello, World!')
 				except sqlite3.IntegrityError:
 					print(f"Element code already exists: {elementCode}")
 					self.send_error(400, message = "Element code already exists")
