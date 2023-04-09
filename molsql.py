@@ -169,18 +169,19 @@ class Database:
 		db['Elements'] = (6, 'C', 'Carbon', '808080', '010101', '000000', 40)
 		db['Elements'] = (7, 'N', 'Nitrogen', '0000FF', '000005', '000002', 40)
 		db['Elements'] = (8, 'O', 'Oxygen', 'FF0000', '050000', '020000', 40)
-
-		sdfDir = 'testFiles/'
-		sdfFiles = glob.glob(os.path.join(sdfDir, '*.sdf'))
-
-		for sdfFile in sdfFiles:
-			mol = os.path.splitext(os.path.basename(sdfFile))[0]
-			with open(sdfFile) as fp:
-				db.add_molecule(mol, fp)
+		sdf_dir = 'testFiles/'
+		db.read_files(sdf_dir)
 
 	def get_list_mol(self):
 		listMol = self.conn.execute("SELECT NAME FROM Molecules").fetchall()
 		return listMol
+
+	def read_files(self, sdf_dir):
+		sdf_files = glob.glob(os.path.join(sdf_dir, '*.sdf'))
+		for sdf_file in sdf_files:
+			mol = os.path.splitext(os.path.basename(sdf_file))[0]
+			with open(sdf_file) as fp:
+				self.add_molecule(mol, fp)
 
 	def write_svg_files(self):
 		db = Database(reset = False)
