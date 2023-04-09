@@ -83,7 +83,7 @@ class customHandler(BaseHTTPRequestHandler):
 					print(f"Element code already exists: {elementCode}")
 					self.send_error(400, message = "Element code already exists")
 			elif operation == "delete":
-				db.remove_element(elementName, elementCode, elementNum, elementRadius, elementCol1, elementCol2, elementCol3)
+				result = db.remove_element(elementName, elementCode, elementNum, elementRadius, elementCol1, elementCol2, elementCol3)
 				if result > 0:
 					print(f"Deleted element: {elementName}, {elementCode}, {elementNum}, {elementRadius}, {elementCol1}, {elementCol2}, {elementCol3}")
 					self.send_response(200)
