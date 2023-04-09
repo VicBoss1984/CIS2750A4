@@ -1,36 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang = "en">
 	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset = "UTF-8">
+		<meta name = "viewport" content = "width = device-width, initial-scale = 1.0">
 		<title>Element Manager</title>
-		<link rel="stylesheet" href="/frontEnd/cssSrc/css_file1.css">
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-		<script src="/frontEnd/javascriptSrc/javascript_code.js"></script>
+		<link rel = "stylesheet" href = "/frontEnd/cssSrc/css_file1.css">
+		<script src = "https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src = "/frontEnd/javascriptSrc/javascript_code.js"></script>
 	</head>
 	<body>
 		<h1> File Upload </h1>
-		<form action="molecule" enctype="multipart/form-data" method="post">
+		<form action = "molecule" enctype = "multipart/form-data" method = "post">
 			<p>
-				<input type="file" id="sdf_file" name="filename"/>
+				<input type = "file" id = "sdf_file" name = "filename"/>
 			</p>
 			<p>
-				<input type="submit" value="Upload"/>
+				<input type = "submit" value = "Upload"/>
 			</p>
 	   </form>
 		<h2>Add/Delete Element</h2>
-		<form id="element-form">
-			<label for="element_code">Element Code:</label>
-			<input type="text" id="element_code" name="element_code" required>
-			<input type="submit" id="submit-btn" value="Submit">
+		<form id = "element-form">
+			<label for = "element_code">Element Code:</label>
+				<input type = "text" id = "element_code" name = "element_code" required>
+				<input type = "submit" id = "submit-btn" value = "Submit">
 			<br><br>
-			<label for="element_name">Element Name:</label>
-			<input type="text" id="element_name" name="element_name" required>
+			<label for = "element_name">Element Name:</label>
+				<input type = "text" id = "element_name" name = "element_name" required>
 			<br><br>
-			<input type="radio" id="add" name="operation" value="add" checked>
-			<label for="add">Add</label>
-			<input type="radio" id="delete" name="operation" value="delete">
-			<label for="delete">Delete</label>
+			<label for = "element_number">Element Number:</label>
+				<input type = "text" id = "element_num" name = "element_number" required>
+			<br><br>
+			<label for = "element_radius">Element Radius:</label>
+				<input type = "text" id = "element_radius" name = "element_radius" required>
+			<br><br>
+			<label for = "element_colour_val1">Element Colour Value 1:</label>
+				<input type = "text" id = "element_col1" name = "element_colour_val1" required>
+			<br><br>
+			<label for = "element_colour_val2">Element Colour Value 2:</label>
+				<input type = "text" id = "element_col2" name = "element_colour_val2" required>
+			<br><br>
+			<label for = "element_colour_val3">Element Colour Value 3:</label>
+				<input type = "text" id = "element_col3" name = "element_colour_val3" required>
+			<br><br>
+			<input type = "radio" id = "add" name = "operation" value = "add" checked>
+			<label for = "add">Add</label>
+			<input type = "radio" id = "delete" name = "operation" value = "delete">
+			<label for = "delete">Delete</label>
 		</form>
 	 </body>
 </html>

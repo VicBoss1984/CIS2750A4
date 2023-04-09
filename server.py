@@ -65,23 +65,27 @@ class customHandler(BaseHTTPRequestHandler):
 			postData = json.loads(postData.decode('utf-8'))
 			elementCode = postData.get('elementCode')
 			elementName = postData.get('elementName')
+			elementNum = postData.get('elementNum')
+			elementRadius = postData.get('elementRadius')
+			elementCol1 = postData.get('elementCol1')
+			elementCol2 = postData.get('elementCol2')
+			elementCol3 = postData.get('elementCol3')
 			operation = postData.get('operation')
 			db = Database(reset = False)
 			if operation == "add":
 				try:
-					db.create_dum_tab()
-					print(f"Added element: {elementCode}, {elementName}")
+					db.add_element(elementName, elementCode, elementNum, elementRadius, elementCol1, elementCol2, elementCol3)
+					print(f"Added element: {elementName}, {elementCode}, {elementNum}, {elementRadius}, {elementCol1}, {elementCol2}, {elementCol3}")
 					self.send_response(200) # OK
 					self.send_header('Content-type', 'text/plain')
 					self.end_headers()
-					self.wfile.write(b'Hello, World!')
 				except sqlite3.IntegrityError:
 					print(f"Element code already exists: {elementCode}")
 					self.send_error(400, message = "Element code already exists")
 			elif operation == "delete":
-				result = db.delete("Elements", "ELEMENT_CODE", elementCode)
+				db.remove_element(elementName, elementCode, elementNum, elementRadius, elementCol1, elementCol2, elementCol3)
 				if result > 0:
-					print(f"Deleted element: {elementCode}")
+					print(f"Deleted element: {elementName}, {elementCode}, {elementNum}, {elementRadius}, {elementCol1}, {elementCol2}, {elementCol3}")
 					self.send_response(200)
 					self.end_headers()
 				else:

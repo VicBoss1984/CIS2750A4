@@ -200,9 +200,15 @@ class Database:
 				with open(svgFilePath, "w") as fp:
 					fp.write(molecule.svg())
 
-	def create_dum_tab(self):
-		self.conn.execute("""CREATE TABLE if not exists Dummy (
-						DUM_NO 		INTEGER);""")
+	def add_element(self, element_name, element_code, element_num, element_radius, element_col1, element_col2, element_col3):
+		self.conn.execute("INSERT INTO Elements (ELEMENT_NAME, ELEMENT_NO, ELEMENT_CODE, COLOUR1, COLOUR2, COLOUR3, RADIUS) VALUES (?, ?, ?, ?, ?, ?, ?)", (element_name, element_num, element_code, element_col1, element_col2, element_col3, element_radius))
+
+	def remove_element(self, element_name, element_code, element_num, element_radius, element_col1, element_col2, element_col3):
+		query = """DELETE FROM Elements 
+		WHERE element_name = ? AND element_code = ? AND element_num = ? AND element_radius = ? AND 
+		element_col1 = ? AND element_col2 = ? AND element_col3 = ?"""
+		self.conn.execute(query, (element_name, element_code, element_num, element_radius, element_col1, element_col2, element_col3))
+		self.conn.commit()
 
 if __name__ == "__main__":
 	db = Database(reset = False)
