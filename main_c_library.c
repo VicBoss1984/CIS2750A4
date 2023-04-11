@@ -320,9 +320,13 @@ void zrotation(xform_matrix xform_matrix, unsigned short deg) {
 void mol_xform(molecule *molecule, xform_matrix matrix) {
   
   for (int ctr = 0; ctr < molecule->atom_no; ctr++) {
-    molecule->atoms[ctr].x = (matrix[0][0] * molecule->atoms[ctr].x) + (matrix[0][1] * molecule->atoms[ctr].y) + (matrix[0][2] * molecule->atoms[ctr].z);
-    molecule->atoms[ctr].y = (matrix[1][0] * molecule->atoms[ctr].x) + (matrix[1][1] * molecule->atoms[ctr].y) + (matrix[1][2] * molecule->atoms[ctr].z);
-    molecule->atoms[ctr].z = (matrix[2][0] * molecule->atoms[ctr].x) + (matrix[2][1] * molecule->atoms[ctr].y) + (matrix[2][2] * molecule->atoms[ctr].z);
+    double x = molecule->atoms[ctr].x;
+    double y = molecule->atoms[ctr].y;
+    double z = molecule->atoms[ctr].z;
+
+    molecule->atoms[ctr].x = (matrix[0][0] * x) + (matrix[0][1] * y) + (matrix[0][2] * z);
+    molecule->atoms[ctr].y = (matrix[1][0] * x) + (matrix[1][1] * y) + (matrix[1][2] * z);
+    molecule->atoms[ctr].z = (matrix[2][0] * x) + (matrix[2][1] * y) + (matrix[2][2] * z);
   }
 
   // I think this is how the new modification for mol_xform is supposed to look like, but I gotta test it more later
