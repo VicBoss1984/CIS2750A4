@@ -18,9 +18,8 @@ class Atom:
 		self.c_atom = c_atom
 		self.z = c_atom.z
 
-	# This is a toString method
 	def __str__(self):
-		return '''%s'%lf'%lf'%lf"''' % (self.c_atom.element, self.c_atom.x, self.c_atom.y, self.c_atom.z)
+		return f"From Atom Class: element is {self.c_atom.element}, x value is {self.c_atom.x}, y value is {self.atom.y}, and z value is {self.atom.z}"
 
 	# This is the svg method for the atoms in the Atom class
 	def svg(self):
@@ -37,10 +36,9 @@ class Bond:
 	def __init__(self, c_bond):
 		self.c_bond = c_bond
 		self.z = c_bond.z
-
-	# Same idea with the Atom toString method
+	
 	def __str__(self):
-		return '''%d'%d'%d'%lf'%lf'%lf'%lf'%lf'%lf'%lf'%lf"''' % (self.c_bond.a1, self.c_bond.a2, self.c_bond.epairs, self.c_bond.x1, self.c_bond.x2, self.c_bond.y1, self.c_bond.y2, self.c_bond.z, self.c_bond.len, self.c_bond.dx, self.c_bond.dy)
+		return f"From Bond Class: atom 1 is {self.c_bond.a1}, atom 2 is {self.c_bond.a2}, epairs is {self.c_bond.epairs}, x1 is {self.c_bond.x1}, x2 is {self.c_bond.x2}, y1 is {self.c_bond.y1}, y2 is {self.c_bond.y2}, z is {self.c_bond.z}, bond length is {self.c_bond.len}, dx is {self.c_bond.dx}, dy is {self.c_bond.dy}"
 
 	# TA from the Thursday lab helped me fix this method. All credit goes to them for helping me fix it!
 	def svg(self):
@@ -48,7 +46,7 @@ class Bond:
 		recY1 = self.c_bond.y1 * 100 + self.c_bond.dx * 10 + offsety
 		recX2 = self.c_bond.x2 * 100 + self.c_bond.dy * 10 + offsetx
 		recY2 = self.c_bond.y2 * 100 - self.c_bond.dx * 10 + offsety
-		recX3 = self.c_bond.x1 * 100 + self.c_bond.dy * 10 + offsetx		
+		recX3 = self.c_bond.x1 * 100 + self.c_bond.dy * 10 + offsetx
 		recY3 = self.c_bond.y1 * 100 - self.c_bond.dx * 10 + offsety
 		recX4 = self.c_bond.x2 * 100 - self.c_bond.dy * 10 + offsetx
 		recY4 = self.c_bond.y2 * 100 + self.c_bond.dx * 10 + offsety
@@ -56,10 +54,6 @@ class Bond:
 
 # Molecule inherits from the molecule struct/class in our C library
 class Molecule(molecule.molecule):
-
-	# ToString method for printing the contents of the molecule class
-	def __str__(self):
-		return '''%d'%d'%d'%d"''' % (molObj.atom_max, molObj.atom_no, molObj.bond_max, molObj.bond_no)
 
 	# I decided to encapsulate the mergesort computations into one method for enchanced readability
 	def mergeAtomBonds(self):
