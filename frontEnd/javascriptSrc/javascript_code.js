@@ -11,12 +11,13 @@ $(document).ready(function () {
     const elementCol2 = $("#element_col2").val();
     const elementCol3 = $("#element_col3").val();
     const operation = $('input[name="operation"]:checked').val();
-
     const formData = new FormData();
+
     if (typeof operation === "undefined") {
       alert("Please select an operation");
       return;
     }
+    
     formData.append("element_code", elementCode);
     formData.append("element_name", elementName);
     formData.append("element_num", elementNum);
