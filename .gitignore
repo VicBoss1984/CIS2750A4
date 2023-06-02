@@ -1,4 +1,5 @@
 docsAndNotes
+.vscode
 *.so
 *.o
 molecule.i
