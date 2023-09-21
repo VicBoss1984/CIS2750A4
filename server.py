@@ -2,10 +2,8 @@ import json
 import MolDisplay
 import sqlite3
 import sys # this import is necessary for using any methods from the system module
-import urllib # I need this import for parsing the web content
 from http.server import HTTPServer, BaseHTTPRequestHandler # I needed this import for the webserver
 from io import BytesIO # just like MolDisplay.py, I can't think of another implementation that would work without the io module
-from urllib.parse import parse_qs
 from molsql import Database
 
 # customHandler is a class that inherits the BaseHTTPRequestHandler class
