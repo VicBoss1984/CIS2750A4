@@ -1,8 +1,7 @@
-import molecule # importing my shared C library
+import molecule
 import molsql
-from io import BytesIO # this import is essential in the parse method later on
-
-molObj = molecule.molecule() # creating an instance of the molecule class/struct from my C library
+from io import BytesIO
+molObj = molecule.molecule()
 
 # These are constants for use later
 header = """<svg version="1.1" width="1000" height="1000" xmlns="http://www.w3.org/2000/svg">"""

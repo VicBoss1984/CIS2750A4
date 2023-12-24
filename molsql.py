@@ -1,4 +1,3 @@
-# We will need these 3 modules for what we are about to do in this class.
 import os
 import glob
 import sqlite3
