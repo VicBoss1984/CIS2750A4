@@ -93,7 +93,7 @@ class Molecule(molecule.molecule):
 	# My parse method is divided into two different implementations since the server sends different things and the normal MolDisplay sends different objects
 	def parse(self, inputFileObject):
 		fileLines = inputFileObject.readlines()
-		if isinstance(inputFileObject, BytesIO) == False:
+		if isinstance(inputFileObject, BytesIO) is False:
 			line = fileLines[3].split()
 			num_atoms = int(line[0])
 			num_bonds = int(line[1])

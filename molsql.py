@@ -9,7 +9,7 @@ class Database:
 	# My intention here was to override the default constructor of this class to always initialize a reset boolean value.
 	# This constructor helps us avoid SQL getting angry at us everytime we try to create new tables that already exist in our database.
 	def __init__(self, reset = False):
-		if reset == True:
+		if reset is True:
 			os.remove('molecules.db')
 		self.conn = sqlite3.connect('molecules.db')
 
