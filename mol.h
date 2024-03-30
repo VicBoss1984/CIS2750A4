@@ -7,35 +7,35 @@
 #include <stdio.h>
 
 struct atom {
-  char element[3];
-  double x, y, z;
+	char element[3];
+	double x, y, z;
 };
 
 struct bond {
-  unsigned short a1;
-  unsigned short a2;
-  struct atom *atoms;
-  unsigned char epairs;
-  double x1, x2, y1, y2, z, len, dx, dy;
+	unsigned short a1;
+	unsigned short a2;
+	struct atom *atoms;
+	unsigned char epairs;
+	double x1, x2, y1, y2, z, len, dx, dy;
 };
 
 struct molecule {
-  unsigned short atom_max, atom_no;
-  struct atom *atoms, **atom_ptrs;
-  unsigned short bond_max, bond_no;
-  struct bond *bonds, **bond_ptrs;
+	unsigned short atom_max, atom_no;
+	struct atom *atoms, **atom_ptrs;
+	unsigned short bond_max, bond_no;
+	struct bond *bonds, **bond_ptrs;
 };
 
 double xform_matrix[3][3];
 
 struct mx_wrapper {
-  double xform_matrix;
+	double xform_matrix;
 };
 
 struct rotations {
-  struct molecule *x[72];
-  struct molecule *y[72];
-  struct molecule *z[72];
+	struct molecule *x[72];
+	struct molecule *y[72];
+	struct molecule *z[72];
 };
 
 void atomset(struct atom *atom, char element[3], double *x, double *y, double *z);
