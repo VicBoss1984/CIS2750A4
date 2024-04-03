@@ -37,19 +37,38 @@ class Bond:
 		self.z = c_bond.z
 	
 	def __str__(self):
-		return f"From Bond Class: atom 1 is {self.c_bond.a1}, atom 2 is {self.c_bond.a2}, epairs is {self.c_bond.epairs}, x1 is {self.c_bond.x1}, x2 is {self.c_bond.x2}, y1 is {self.c_bond.y1}, y2 is {self.c_bond.y2}, z is {self.c_bond.z}, bond length is {self.c_bond.len}, dx is {self.c_bond.dx}, dy is {self.c_bond.dy}"
+		cb = self.c_bond  # Local variable for shorter reference
+		parts = [
+			f"atom 1 is {cb.a1}",
+			f"atom 2 is {cb.a2}",
+			f"epairs is {cb.epairs}",
+			f"x1 is {cb.x1}",
+			f"x2 is {cb.x2}",
+			f"y1 is {cb.y1}",
+			f"y2 is {cb.y2}",
+			f"z is {cb.z}",
+			f"bond length is {cb.len}",
+			f"dx is {cb.dx}",
+			f"dy is {cb.dy}"
+		]
+		return "From Bond Class: " + ", ".join(parts)
 
 	# TA from the Thursday lab helped me fix this method. All credit goes to them for helping me fix it!
 	def svg(self):
-		recX1 = self.c_bond.x1 * 100 - self.c_bond.dy * 10 + offsetx
-		recY1 = self.c_bond.y1 * 100 + self.c_bond.dx * 10 + offsety
-		recX2 = self.c_bond.x2 * 100 + self.c_bond.dy * 10 + offsetx
-		recY2 = self.c_bond.y2 * 100 - self.c_bond.dx * 10 + offsety
-		recX3 = self.c_bond.x1 * 100 + self.c_bond.dy * 10 + offsetx
-		recY3 = self.c_bond.y1 * 100 - self.c_bond.dx * 10 + offsety
-		recX4 = self.c_bond.x2 * 100 - self.c_bond.dy * 10 + offsetx
-		recY4 = self.c_bond.y2 * 100 + self.c_bond.dx * 10 + offsety
-		return ' <polygon points="%.2f,%.2f %.2f,%.2f %.2f,%.2f %.2f,%.2f" fill="green"/>\n' % (recX1, recY1, recX3, recY3, recX2, recY2, recX4, recY4)
+		cb = self.c_bond
+		recX1 = cb.x1 * 100 - cb.dy * 10 + offsetx
+		recY1 = cb.y1 * 100 + cb.dx * 10 + offsety
+		recX2 = cb.x2 * 100 + cb.dy * 10 + offsetx
+		recY2 = cb.y2 * 100 - cb.dx * 10 + offsety
+		recX3 = cb.x1 * 100 + cb.dy * 10 + offsetx
+		recY3 = cb.y1 * 100 - cb.dx * 10 + offsety
+		recX4 = cb.x2 * 100 - cb.dy * 10 + offsetx
+		recY4 = cb.y2 * 100 + cb.dx * 10 + offsety
+		points = (
+			f"{recX1:.2f},{recY1:.2f} {recX3:.2f},{recY3:.2f} "
+			f"{recX2:.2f},{recY2:.2f} {recX4:.2f},{recY4:.2f}"
+		)
+		return f' <polygon points="{points}" fill="green"/>\n'
 
 # Molecule inherits from the molecule struct/class in our C library
 class Molecule(molecule.molecule):
