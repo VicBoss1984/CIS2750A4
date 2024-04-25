@@ -1,8 +1,8 @@
 docsAndNotes
+pyrightconfig.json
 .vscode
 *.so
 *.o
-molecule.i
 molecule.py
 molecule_wrap.c
 testFiles
@@ -14,3 +14,4 @@ Water.svg
 Caffeine.svg
 Isopentanol.svg
 svgFiles
+
